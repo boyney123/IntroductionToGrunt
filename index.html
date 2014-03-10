@@ -16,6 +16,7 @@
 
 		<link rel="stylesheet" href="css/reveal.min.css">
 		<link rel="stylesheet" href="css/theme/blood.css" id="theme">
+		<link rel="stylesheet" href="css/styles.css">
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -54,10 +55,294 @@
 					<h2>Welcome</h2>
 					<img src="./imgs/whale.jpg" alt="">
 				</section>
+
 				<section>
-					<h2>What is it?</h2>
+					<h2>Who am I?</h2>
 					<img src="./imgs/whale.jpg" alt="">
 				</section>
+
+				<section>
+					<h3>Whats covered in this brownbag?</h3>
+					<ul>
+						<li>What is Grunt and its benefits?</li>
+						<li>Getting Started with Grunt and the basics</li>
+						<li>Grunt API and creating custom tasks</li>
+						<li>Useful plugins and resources</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>What is Grunt and its benefits?</h2>
+				</section>
+
+				<section>
+					<h2>Catch Phrase</h2>
+					<p>Guess the software</p>
+					<img src="./imgs/cphrase.gif" width="60%" alt="">
+				</section>
+
+				<section class="catchphrase">
+					<img src="./imgs/rake.jpg" width="50%" alt="">
+				</section>
+
+				<section>
+					<img src="./imgs/ant.jpg" alt="">
+				</section>
+
+				<section>
+					<img src="./imgs/maven.png" alt="">
+				</section>
+
+				<section>
+					<img src="./imgs/gulp.jpg" width="50%" alt="">
+				</section>
+
+				<section>
+					<img src="./imgs/gruntLogo.png" alt="">
+				</section>
+
+				<section>
+					<h2>Benefits of grunt</h2>
+					<ul>
+						<li class="fragment">Up and running within minutes</li>
+						<li class="fragment">Easy to use</li>
+						<li class="fragment">Automate the boring stuff</li>
+						<li class="fragment">Great community</li>
+						<li class="fragment">Its JavaScript...</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Its JavaScript!</h2>
+					<img src="./imgs/dance.gif" width="50%" alt="">
+				</section>
+
+				<section>
+					<h2>Who uses it?</h2>
+					<img src="./imgs/useofgrunt.png" alt="">
+				</section>
+
+				<section>
+					<h2>How can it help me?</h2>
+					<ul>
+						<li class="fragment">JSHint</li>
+						<li class="fragment">Compress Images</li>
+						<li class="fragment">Compress JS And CSS</li>
+						<li class="fragment">Create Sprites</li>
+						<li class="fragment">Remove unused CSS</li>
+						<li class="fragment">And more...</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Getting Started</h2>
+				</section>
+
+				<section>
+					<h4>Installing the Command Line Interface (CLI)</h4>
+					<pre><code data-trim contenteditable>
+npm install -g grunt-cli
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>This will put grunt command in your system path</li>
+							<li>does not install the grunt rask runner</li>
+							<li>Its job is to run the version of grunt which has been installed next to a gruntfile</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h4>How the CLI works</h4>
+					<pre><code data-trim contenteditable>
+
+try {
+  gruntpath = resolve('grunt', {basedir: basedir});
+} catch (ex) {
+  gruntpath = findup('lib/grunt.js');
+  // No grunt install found!
+  if (!gruntpath) {
+    if (options.version) { process.exit(); }
+    if (options.help) { info.help(); }
+    info.fatal('Unable to find local grunt.', 99);
+  }
+}
+
+// Everything looks good. Require local grunt and run it.
+require(gruntpath).cli();
+					</code></pre>
+					<small>Full file here <a href="https://github.com/gruntjs/grunt-cli/blob/master/bin/grunt">grunt.js</a></small>
+					<aside class="notes">
+						<ul>
+							<li>Each time grunt is run it looks locally installed grunt using nodes require system</li>
+							<li>You can run grunt in differnt folders for differnt versions of grunt</li>
+							<li>If grunt is found, the cli loads the local install and applys your config to it and executes your tasks</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h4>package.json and GruntFile.js</h4>
+				</section>
+
+				<section>
+					<h4>package.json</h4>
+					<pre><code data-trim contenteditable>
+{
+  "name": "my-project-name",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2"
+  }
+}
+					</code></pre>
+					<pre><code data-trim contenteditable>
+npm init //command will create basic package.json file					
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>This will put grunt command in your system path</li>
+							<li>does not install the grunt rask runner</li>
+							<li>Its job is to run the version of grunt which has been installed next to a gruntfile</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h4>GruntFile.js</h4>
+					<ol>
+						<li class="fragment">Wrapper function</li>
+						<li class="fragment">Task configuration</li>
+						<li class="fragment">Loading Grunt tasks and plugins</li>
+						<li class="fragment">Custom tasks</li>
+					</ol>
+				</section>
+
+				<section>
+					<h4>GruntFile.js in action</h4>
+					<pre><code data-trim contenteditable>
+//wrapper function
+module.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: 'src/<%= pkg.name %>.js',
+        dest: 'build/<%= pkg.name %>.min.js'
+      }
+    }
+  });
+
+  // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  // Default task(s) and custom tasks
+  grunt.registerTask('default', ['uglify']);
+
+};
+					</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>This will put grunt command in your system path</li>
+							<li>does not install the grunt rask runner</li>
+							<li>Its job is to run the version of grunt which has been installed next to a gruntfile</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h4>Installing a plugin - Is Easy!</h4>
+					<ol>
+						<li class="fragment">Installing using npm</li>
+						<li class="fragment">Load plugin for use in the GruntFile</li>
+						<li class="fragment">Configure plugin for use</li>
+						<li class="fragment">Use and abuse</li>
+					</ol>
+				</section>
+
+				<section>
+					<h4>1. Installing a plugin</h4>
+					<pre><code data-trim contenteditable>
+npm install {plugin name} --save-dev
+					</code></pre>
+					<pre><code data-trim contenteditable>
+npm install grunt-contrib-cssmin --save-dev
+					</code></pre>
+				</section>
+
+
+				<section>
+					<h4>2. Load plugin for use in the GruntFile</h4>
+					<pre><code data-trim contenteditable>
+grunt.loadNpmTasks({plugin name});
+					</code></pre>
+					<pre><code data-trim contenteditable>
+grunt.loadNpmTasks('grunt-contrib-cssmin');
+					</code></pre>
+				</section>
+
+				<section>
+					<h4>3. Configure plugin for use</h4>
+					<pre><code data-trim contenteditable>
+//wrapper function
+module.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: 'src/<%= pkg.name %>.js',
+        dest: 'build/<%= pkg.name %>.min.js'
+      }
+    },
+    //Minify all contents of a release directory and add a .min.css extension
+    cssmin: {
+	minify: {
+		    expand: true,
+		    cwd: 'release/css/',
+		    src: ['*.css', '!*.min.css'],
+		    dest: 'release/css/',
+		    ext: '.min.css'
+		  }
+}
+  });
+
+  // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  // Load the css min
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+
+  // Default task(s) and custom tasks
+  grunt.registerTask('default', ['uglify', 'cssmin']);
+  // New task to just minify the css
+  grunt.registerTask('css', ['cssmin']);
+
+};
+					</code></pre>
+				</section>
+
+				<section>
+					<h4>4. Use and Abuse</h4>
+					<pre><code data-trim contenteditable>
+grunt
+					</code></pre>
+										<pre><code data-trim contenteditable>
+grunt css
+					</code></pre>
+				</section>
+
 
 				<!-- Example of nested vertical slides -->
 				<section>
